@@ -11,16 +11,12 @@ import SwiftUISnapDraggingModifier
 struct GotLikeView: View {
     
     @State var touchPointCenter = CGPoint.zero
+    @State var profiles: [Profile] = MockStore.Profiles
     
     var columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible()),
     ]
-    
-    @State var profiles: [Profile] = MockStore.Profiles
-    
-    @State private var allowsHitTesting = true
-
     
     var body: some View {
         VStack {
@@ -49,27 +45,28 @@ struct GotLikeView: View {
                         GridCell(message: profile.message, nickname: profile.nickname, age: profile.age, residence: profile.residence)
                             .offset(x: touchPointCenter.x)
                             .onTapGesture {
-                                allowsHitTesting = true
+                                //
                             }
                             .gesture(DragGesture()
                                 .onChanged { value in
-                                    allowsHitTesting = true
-                                    if value.translation.height > 30.0 {
-                                        print(value.translation)
-                                        allowsHitTesting = false
-                                        print(allowsHitTesting)
+                                   
+                                    if value.translation.height < -30 || 30.0 < value.translation.height {
+                                        print(value.translation, "1")
+                                        
+                                        
                                     } else if value.translation.width < -20.0 || 20.0 < value.translation.width {
-                                        print(value.translation)
+                                        
+                                        print(value.translation, "2")
                                         withAnimation (.easeOut) {
                                             self.touchPointCenter.x = value.location.x
                                         }
-                                        print(allowsHitTesting)
+                                        
                                     } else {
-                                        allowsHitTesting = true
-                                        print(allowsHitTesting)
+                                       //
+                                        print(value.translation, "3")
                                     }
                                 })
-                            .allowsHitTesting(allowsHitTesting)
+                            
                             
                             
                     }
