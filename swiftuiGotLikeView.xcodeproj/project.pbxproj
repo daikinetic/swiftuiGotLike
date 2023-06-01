@@ -8,12 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		65A53B032A25ED5400CF3BCE /* swiftuiGotLikeViewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A53B022A25ED5400CF3BCE /* swiftuiGotLikeViewApp.swift */; };
-		65A53B052A25ED5400CF3BCE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A53B042A25ED5400CF3BCE /* ContentView.swift */; };
+		65A53B052A25ED5400CF3BCE /* GotLikeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A53B042A25ED5400CF3BCE /* GotLikeView.swift */; };
 		65A53B072A25ED5500CF3BCE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65A53B062A25ED5500CF3BCE /* Assets.xcassets */; };
 		65A53B0A2A25ED5500CF3BCE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65A53B092A25ED5500CF3BCE /* Preview Assets.xcassets */; };
 		65A53B142A25ED5500CF3BCE /* swiftuiGotLikeViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A53B132A25ED5500CF3BCE /* swiftuiGotLikeViewTests.swift */; };
 		65A53B1E2A25ED5500CF3BCE /* swiftuiGotLikeViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A53B1D2A25ED5500CF3BCE /* swiftuiGotLikeViewUITests.swift */; };
 		65A53B202A25ED5500CF3BCE /* swiftuiGotLikeViewUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A53B1F2A25ED5500CF3BCE /* swiftuiGotLikeViewUITestsLaunchTests.swift */; };
+		65BF72DB2A276DBD0011C913 /* SwiftUISnapDraggingModifier in Frameworks */ = {isa = PBXBuildFile; productRef = 65BF72DA2A276DBD0011C913 /* SwiftUISnapDraggingModifier */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +37,7 @@
 /* Begin PBXFileReference section */
 		65A53AFF2A25ED5400CF3BCE /* swiftuiGotLikeView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = swiftuiGotLikeView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65A53B022A25ED5400CF3BCE /* swiftuiGotLikeViewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = swiftuiGotLikeViewApp.swift; sourceTree = "<group>"; };
-		65A53B042A25ED5400CF3BCE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		65A53B042A25ED5400CF3BCE /* GotLikeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GotLikeView.swift; sourceTree = "<group>"; };
 		65A53B062A25ED5500CF3BCE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		65A53B092A25ED5500CF3BCE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		65A53B0F2A25ED5500CF3BCE /* swiftuiGotLikeViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = swiftuiGotLikeViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,6 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65BF72DB2A276DBD0011C913 /* SwiftUISnapDraggingModifier in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,7 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				65A53B022A25ED5400CF3BCE /* swiftuiGotLikeViewApp.swift */,
-				65A53B042A25ED5400CF3BCE /* ContentView.swift */,
+				65A53B042A25ED5400CF3BCE /* GotLikeView.swift */,
 				65A53B062A25ED5500CF3BCE /* Assets.xcassets */,
 				65A53B082A25ED5500CF3BCE /* Preview Content */,
 			);
@@ -143,6 +145,9 @@
 			dependencies = (
 			);
 			name = swiftuiGotLikeView;
+			packageProductDependencies = (
+				65BF72DA2A276DBD0011C913 /* SwiftUISnapDraggingModifier */,
+			);
 			productName = swiftuiGotLikeView;
 			productReference = 65A53AFF2A25ED5400CF3BCE /* swiftuiGotLikeView.app */;
 			productType = "com.apple.product-type.application";
@@ -215,6 +220,9 @@
 				Base,
 			);
 			mainGroup = 65A53AF62A25ED5400CF3BCE;
+			packageReferences = (
+				65BF72D92A276DBD0011C913 /* XCRemoteSwiftPackageReference "swiftui-snap-dragging-modifier" */,
+			);
 			productRefGroup = 65A53B002A25ED5400CF3BCE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -257,7 +265,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65A53B052A25ED5400CF3BCE /* ContentView.swift in Sources */,
+				65A53B052A25ED5400CF3BCE /* GotLikeView.swift in Sources */,
 				65A53B032A25ED5400CF3BCE /* swiftuiGotLikeViewApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -577,6 +585,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		65BF72D92A276DBD0011C913 /* XCRemoteSwiftPackageReference "swiftui-snap-dragging-modifier" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/FluidGroup/swiftui-snap-dragging-modifier";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		65BF72DA2A276DBD0011C913 /* SwiftUISnapDraggingModifier */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 65BF72D92A276DBD0011C913 /* XCRemoteSwiftPackageReference "swiftui-snap-dragging-modifier" */;
+			productName = SwiftUISnapDraggingModifier;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 65A53AF72A25ED5400CF3BCE /* Project object */;
 }
