@@ -8,14 +8,28 @@
 import SwiftUI
 import SwiftUISnapDraggingModifier
 
+
+
 struct GotLikeView: View {
     
-    @ObservedObject var GotLikeVM = GotLikeViewModel()
+    @StateObject var GotLikeVM = GotLikeViewModel()
+    @Namespace var namespace
     
     var columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible()),
     ]
+    
+//    @State private var selectedItemIDs: Set<Profile> = []
+//
+//    private var selectedItems: [Profile] {GotLikeVM.profiles.filter { selectedItemIDs.contains($0) }}
+//    private var unSelectedItems: [Profile] {GotLikeVM.profiles.filter { !selectedItemIDs.contains($0) }}
+//    private func select(_ item: Profile) {
+//        withAnimation(.spring(response: 0.5)) {
+//            _ = selectedItemIDs.insert(item)
+//        }
+//    }
+    
     
     var body: some View {
         VStack {
@@ -34,6 +48,7 @@ struct GotLikeView: View {
                     .frame(width: 30, height: 30)
                     .foregroundColor(.gray)
                     .padding(.trailing, 10)
+                    
             }
             .padding(.bottom, 15)
             .padding(.horizontal, 15)
@@ -42,12 +57,14 @@ struct GotLikeView: View {
                 LazyVGrid (columns: columns, spacing: 24){
                     ForEach(Array(GotLikeVM.profiles.enumerated()), id: \.offset) { index, profile in
                         GridCell(
+                            GotLikeVM: GotLikeVM,
                             message: profile.message,
                             nickname: profile.nickname,
                             age: profile.age,
                             residence: profile.residence,
                             index: index
                         )
+                        .matchedGeometryEffect(id: "\(index)", in: namespace)
                     }
                 }
             }
@@ -68,8 +85,11 @@ struct ContentView_Previews: PreviewProvider {
 
 struct GridCell: View {
     
-    @StateObject var GotLikeVM = GotLikeViewModel()
+    @ObservedObject var GotLikeVM: GotLikeViewModel
+    @ObservedObject var GridCM = GridCellModel()
+    @Namespace var namespace
     
+    let id = UUID()
     let message: String
     let nickname: String
     let age: Int
@@ -123,7 +143,8 @@ struct GridCell: View {
                 }
             }
         }
-        .offset(x: GotLikeVM.offset.x)
+        .matchedGeometryEffect(id: index, in: namespace)
+        .offset(x: GridCM.offset.x)
         .onTapGesture {
             print("here")
         }
@@ -138,31 +159,36 @@ struct GridCell: View {
                     
                     print(value.translation, "2")
                     withAnimation (.easeOut) {
-                        self.GotLikeVM.offset.x = value.location.x - 250
-//                        GotLikeVM.isSwiped = true
+                        self.GridCM.offset.x = value.location.x - 250
+                        GridCM.isSwiped = true
                     }
                     
                 } else if 20.0 < value.translation.width {
                     
-                    print(value.translation, "2")
+                    print(value.translation, "3")
                     withAnimation (.easeOut) {
                         self.GotLikeVM.offset.x = value.location.x
                     }
                     
                 } else {
                    
-                    print(value.translation, "3")
+                    print(value.translation, "4")
                 }
             }
                  
             .onEnded { value in
-                if GotLikeVM.isSwiped {
-                    withAnimation (.easeOut) {
-//                        GotLikeVM.itemRemove(index: index)
-//                        GotLikeVM.isSwiped = false
+                if GridCM.isSwiped {
+                    withAnimation (.spring(response: 0.5)) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            GotLikeVM.itemRemove(index: index)
+                            GridCM.isSwiped = false
+                            print(GotLikeVM.profiles.count)
+                        }
                     }
                 }
             }
+                 
+        
         )
         
     }

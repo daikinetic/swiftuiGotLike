@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+class GridCellModel: ObservableObject {
+    @Published var offset = CGPoint.zero
+    @Published var isSwiped = false
+}
+
 class GotLikeViewModel : ObservableObject {
     @Published var profiles: [Profile] = Profiles
     @Published var offset = CGPoint.zero
@@ -14,7 +19,7 @@ class GotLikeViewModel : ObservableObject {
     
     func itemRemove(index: Int) {
         print("Delete: \(profiles[index].nickname)")
-        profiles.remove(at: index)
+        _ = profiles.remove(at: index)
     }
     
     static var Profiles = [
@@ -38,7 +43,7 @@ class GotLikeViewModel : ObservableObject {
     
 }
 
-struct Profile: Identifiable {
+struct Profile: Identifiable, Hashable {
     let id = UUID()
     let nickname: String
     let image: String = ""
