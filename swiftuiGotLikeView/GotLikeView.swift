@@ -10,21 +10,17 @@ import SwiftUISnapDraggingModifier
 
 struct GotLikeView: View {
     
-    @State var offset = CGPoint.zero
-    @State var profiles: [Profile] = MockStore.Profiles
-    @StateObject var gridVM = GridCellModel()
+    @ObservedObject var GotLikeVM = GotLikeViewModel()
     
     var columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible()),
     ]
     
-    @State var isSwiped = false
-    
     var body: some View {
         VStack {
             HStack (alignment: .center) {
-                Text("お相手からのいいね：\(profiles.count)")
+                Text("お相手からのいいね：\(GotLikeVM.profiles.count)")
                     .font(.body)
                     .foregroundColor(.white)
                     .padding(EdgeInsets(top: 10, leading: 28, bottom: 10, trailing: 28))
@@ -44,7 +40,7 @@ struct GotLikeView: View {
             
             ScrollView (.vertical, showsIndicators: false) {
                 LazyVGrid (columns: columns, spacing: 24){
-                    ForEach(Array(profiles.enumerated()), id: \.offset) { index, profile in
+                    ForEach(Array(GotLikeVM.profiles.enumerated()), id: \.offset) { index, profile in
                         GridCell(
                             message: profile.message,
                             nickname: profile.nickname,
@@ -77,12 +73,6 @@ struct GotLikeView: View {
 //            }
 //    }
     
-    func itemRemove(index: Int) {
-        
-        print("Delete: \(profiles[index].nickname)")
-        profiles.remove(at: index)
-        
-    }
 }
 
 struct ContentView_Previews: PreviewProvider {
@@ -91,13 +81,9 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-class GridCellModel : ObservableObject {
-    @Published var offset = CGPoint.zero
-}
-
 struct GridCell: View {
     
-    @StateObject var gridCM = GridCellModel()
+    @StateObject var GotLikeVM = GotLikeViewModel()
     
     let message: String
     let nickname: String
@@ -108,7 +94,7 @@ struct GridCell: View {
         VStack {
             ZStack(alignment: .bottom) {
                 ZStack (alignment: .topTrailing){
-                    Image("a")
+                    Image("blackSheet")
                         .resizable()
                         .aspectRatio( 160/225, contentMode: .fill)
                         .cornerRadius(20)
@@ -151,7 +137,7 @@ struct GridCell: View {
                 }
             }
         }
-        .offset(x: gridCM.offset.x)
+        .offset(x: GotLikeVM.offset.x)
         .onTapGesture {
             print("here")
         }
@@ -166,8 +152,8 @@ struct GridCell: View {
                     
                     print(value.translation, "2")
                     withAnimation (.easeOut) {
-                        self.gridCM.offset.x = value.location.x
-                        //isSwiped = true
+                        self.GotLikeVM.offset.x = value.location.x
+                        // GotLikeVM.isSwiped = true
                     }
                     
                 } else {
@@ -177,10 +163,10 @@ struct GridCell: View {
             }
                  
             .onEnded { value in
-//                if isSwiped {
+//                if GotLikeVM.isSwiped {
 //                    withAnimation (.easeOut) {
-//                        // itemRemove(index: index)
-//                        isSwiped = false
+//                        GotLikeVM.itemRemove(index: index)
+//                        GotLikeVM.isSwiped = false
 //                    }
 //                }
             }
@@ -188,39 +174,6 @@ struct GridCell: View {
         
     }
 }
-
-
-
-struct Profile: Identifiable {
-    let id = UUID()
-    let nickname: String
-    let image: String = ""
-    let message: String = "はじめまして"
-    let age: Int
-    let residence: String
-}
-
-struct MockStore {
-    static var Profiles = [
-        Profile(nickname: "James", age: 22, residence: "東京"),
-        Profile(nickname: "Jackson", age: 24, residence: "千葉"),
-        Profile(nickname: "James", age: 22, residence: "東京"),
-        Profile(nickname: "Jackson", age: 24, residence: "千葉"),
-        Profile(nickname: "Jackson", age: 24, residence: "千葉"),
-        Profile(nickname: "James", age: 22, residence: "東京"),
-        Profile(nickname: "James", age: 22, residence: "東京"),
-        Profile(nickname: "Jackson", age: 24, residence: "千葉"),
-        Profile(nickname: "James", age: 22, residence: "東京"),
-        Profile(nickname: "Jackson", age: 24, residence: "千葉"),
-        Profile(nickname: "Jackson", age: 24, residence: "千葉"),
-        Profile(nickname: "James", age: 22, residence: "東京"),
-        Profile(nickname: "James", age: 22, residence: "東京"),
-        Profile(nickname: "Jackson", age: 24, residence: "千葉"),
-        Profile(nickname: "James", age: 22, residence: "東京"),
-        
-    ]
-}
-
 
 extension Color {
     static var random: Color {
@@ -254,8 +207,4 @@ extension ScrollView {
     func refreshable(action: @escaping @Sendable () async -> Void) -> some View {
         modifier(RefreshableModifier(action: action))
     }
-}
-
-private func sampleFunc() {
-    print("aaa")
 }

@@ -14,6 +14,7 @@
 		65A53B142A25ED5500CF3BCE /* swiftuiGotLikeViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A53B132A25ED5500CF3BCE /* swiftuiGotLikeViewTests.swift */; };
 		65A53B1E2A25ED5500CF3BCE /* swiftuiGotLikeViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A53B1D2A25ED5500CF3BCE /* swiftuiGotLikeViewUITests.swift */; };
 		65A53B202A25ED5500CF3BCE /* swiftuiGotLikeViewUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A53B1F2A25ED5500CF3BCE /* swiftuiGotLikeViewUITestsLaunchTests.swift */; };
+		65B4C2E52A2DBB1500CA41E7 /* GotLikeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B4C2E42A2DBB1500CA41E7 /* GotLikeViewModel.swift */; };
 		65BF72DB2A276DBD0011C913 /* SwiftUISnapDraggingModifier in Frameworks */ = {isa = PBXBuildFile; productRef = 65BF72DA2A276DBD0011C913 /* SwiftUISnapDraggingModifier */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +46,7 @@
 		65A53B192A25ED5500CF3BCE /* swiftuiGotLikeViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = swiftuiGotLikeViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		65A53B1D2A25ED5500CF3BCE /* swiftuiGotLikeViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = swiftuiGotLikeViewUITests.swift; sourceTree = "<group>"; };
 		65A53B1F2A25ED5500CF3BCE /* swiftuiGotLikeViewUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = swiftuiGotLikeViewUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		65B4C2E42A2DBB1500CA41E7 /* GotLikeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GotLikeViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 			children = (
 				65A53B022A25ED5400CF3BCE /* swiftuiGotLikeViewApp.swift */,
 				65A53B042A25ED5400CF3BCE /* GotLikeView.swift */,
+				65B4C2E42A2DBB1500CA41E7 /* GotLikeViewModel.swift */,
 				65A53B062A25ED5500CF3BCE /* Assets.xcassets */,
 				65A53B082A25ED5500CF3BCE /* Preview Content */,
 			);
@@ -267,6 +270,7 @@
 			files = (
 				65A53B052A25ED5400CF3BCE /* GotLikeView.swift in Sources */,
 				65A53B032A25ED5400CF3BCE /* swiftuiGotLikeViewApp.swift in Sources */,
+				65B4C2E52A2DBB1500CA41E7 /* GotLikeViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
