@@ -10,13 +10,16 @@ import SwiftUISnapDraggingModifier
 
 struct GotLikeView: View {
     
-    @State var touchPointCenter = CGPoint.zero
+    @State var offset = CGPoint.zero
     @State var profiles: [Profile] = MockStore.Profiles
+    @StateObject var gridVM = GridCellModel()
     
     var columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible()),
     ]
+    
+    @State var isSwiped = false
     
     var body: some View {
         VStack {
@@ -41,36 +44,14 @@ struct GotLikeView: View {
             
             ScrollView (.vertical, showsIndicators: false) {
                 LazyVGrid (columns: columns, spacing: 24){
-                    ForEach(profiles, id:\.id) { profile in
-                        GridCell(message: profile.message, nickname: profile.nickname, age: profile.age, residence: profile.residence)
-                            .offset(x: touchPointCenter.x)
-                            .onTapGesture {
-                                //
-                            }
-                            .gesture(DragGesture()
-                                .onChanged { value in
-                                   
-                                    if value.translation.height < -30 || 30.0 < value.translation.height {
-                                        print(value.translation, "1")
-                                        
-                                        
-                                    } else if value.translation.width < -20.0 || 20.0 < value.translation.width {
-                                        
-                                        print(value.translation, "2")
-                                        withAnimation (.easeOut) {
-                                            self.touchPointCenter.x = value.location.x
-                                        }
-                                        
-                                    } else {
-                                       //
-                                        print(value.translation, "3")
-                                    }
-                                })
-                            
-                            
-                            
+                    ForEach(Array(profiles.enumerated()), id: \.offset) { index, profile in
+                        GridCell(
+                            message: profile.message,
+                            nickname: profile.nickname,
+                            age: profile.age,
+                            residence: profile.residence
+                        )
                     }
-                    
                 }
             }
             .refreshable {
@@ -81,28 +62,26 @@ struct GotLikeView: View {
         .padding(.vertical, 10)
     }
     
-    @GestureState private var isDetectingLongPress = false
-    @State private var completedLongPress = false
+//    @GestureState private var isDetectingLongPress = false
+//    @State private var completedLongPress = false
+//
+//    var longPress: some Gesture {
+//        LongPressGesture(minimumDuration: 3)
+//            .updating($isDetectingLongPress) { currentState, gestureState,
+//                transaction in
+//                gestureState = currentState
+//                transaction.animation = Animation.easeIn(duration: 2.0)
+//            }
+//            .onEnded { finished in
+//                self.completedLongPress = finished
+//            }
+//    }
     
-    var longPress: some Gesture {
-        LongPressGesture(minimumDuration: 3)
-            .updating($isDetectingLongPress) { currentState, gestureState,
-                transaction in
-                gestureState = currentState
-                transaction.animation = Animation.easeIn(duration: 2.0)
-            }
-            .onEnded { finished in
-                self.completedLongPress = finished
-            }
-    }
-    
-    func itemRemove(id: UUID) {
-        for (i, profile) in profiles.enumerated() {
-            if profile.id == id {
-                print("Delete: \(profiles[i].nickname)")
-                profiles.remove(at: i)
-            }
-        }
+    func itemRemove(index: Int) {
+        
+        print("Delete: \(profiles[index].nickname)")
+        profiles.remove(at: index)
+        
     }
 }
 
@@ -112,12 +91,19 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
+class GridCellModel : ObservableObject {
+    @Published var offset = CGPoint.zero
+}
+
 struct GridCell: View {
+    
+    @StateObject var gridCM = GridCellModel()
+    
     let message: String
     let nickname: String
     let age: Int
     let residence: String
-    
+
     var body: some View {
         VStack {
             ZStack(alignment: .bottom) {
@@ -165,6 +151,40 @@ struct GridCell: View {
                 }
             }
         }
+        .offset(x: gridCM.offset.x)
+        .onTapGesture {
+            print("here")
+        }
+        .gesture(DragGesture()
+            .onChanged { value in
+               
+                if value.translation.height < -30 || 30.0 < value.translation.height {
+                    print(value.translation, "1")
+                    
+                    
+                } else if value.translation.width < -20.0 || 20.0 < value.translation.width {
+                    
+                    print(value.translation, "2")
+                    withAnimation (.easeOut) {
+                        self.gridCM.offset.x = value.location.x
+                        //isSwiped = true
+                    }
+                    
+                } else {
+                   
+                    print(value.translation, "3")
+                }
+            }
+                 
+            .onEnded { value in
+//                if isSwiped {
+//                    withAnimation (.easeOut) {
+//                        // itemRemove(index: index)
+//                        isSwiped = false
+//                    }
+//                }
+            }
+        )
         
     }
 }
