@@ -45,7 +45,8 @@ struct GotLikeView: View {
                             message: profile.message,
                             nickname: profile.nickname,
                             age: profile.age,
-                            residence: profile.residence
+                            residence: profile.residence,
+                            index: index
                         )
                     }
                 }
@@ -73,6 +74,7 @@ struct GridCell: View {
     let nickname: String
     let age: Int
     let residence: String
+    let index: Int
 
     var body: some View {
         VStack {
@@ -132,12 +134,19 @@ struct GridCell: View {
                     print(value.translation, "1")
                     
                     
-                } else if value.translation.width < -20.0 || 20.0 < value.translation.width {
+                } else if value.translation.width < -20.0 {
+                    
+                    print(value.translation, "2")
+                    withAnimation (.easeOut) {
+                        self.GotLikeVM.offset.x = value.location.x - 250
+//                        GotLikeVM.isSwiped = true
+                    }
+                    
+                } else if 20.0 < value.translation.width {
                     
                     print(value.translation, "2")
                     withAnimation (.easeOut) {
                         self.GotLikeVM.offset.x = value.location.x
-                        // GotLikeVM.isSwiped = true
                     }
                     
                 } else {
@@ -147,12 +156,12 @@ struct GridCell: View {
             }
                  
             .onEnded { value in
-//                if GotLikeVM.isSwiped {
-//                    withAnimation (.easeOut) {
+                if GotLikeVM.isSwiped {
+                    withAnimation (.easeOut) {
 //                        GotLikeVM.itemRemove(index: index)
 //                        GotLikeVM.isSwiped = false
-//                    }
-//                }
+                    }
+                }
             }
         )
         
