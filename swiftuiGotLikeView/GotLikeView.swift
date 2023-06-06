@@ -20,17 +20,6 @@ struct GotLikeView: View {
         GridItem(.flexible()),
     ]
     
-//    @State private var selectedItemIDs: Set<Profile> = []
-//
-//    private var selectedItems: [Profile] {GotLikeVM.profiles.filter { selectedItemIDs.contains($0) }}
-//    private var unSelectedItems: [Profile] {GotLikeVM.profiles.filter { !selectedItemIDs.contains($0) }}
-//    private func select(_ item: Profile) {
-//        withAnimation(.spring(response: 0.5)) {
-//            _ = selectedItemIDs.insert(item)
-//        }
-//    }
-    
-    
     var body: some View {
         VStack {
             HStack (alignment: .center) {
@@ -55,7 +44,7 @@ struct GotLikeView: View {
             
             ScrollView (.vertical, showsIndicators: false) {
                 LazyVGrid (columns: columns, spacing: 24){
-                    ForEach(Array(GotLikeVM.profiles.enumerated()), id: \.offset) { index, profile in
+                    ForEach(Array(GotLikeVM.profiles.enumerated()), id: \.element) { index, profile in
                         GridCell(
                             GotLikeVM: GotLikeVM,
                             message: profile.message,
@@ -64,9 +53,10 @@ struct GotLikeView: View {
                             residence: profile.residence,
                             index: index
                         )
-                        .matchedGeometryEffect(id: "\(index)", in: namespace)
                     }
                 }
+                .animation(.spring(), value: GotLikeVM.profiles)
+
             }
             .refreshable {
                 await Task.sleep(1000000000)
@@ -143,10 +133,9 @@ struct GridCell: View {
                 }
             }
         }
-        .matchedGeometryEffect(id: index, in: namespace)
         .offset(x: GridCM.offset.x)
         .onTapGesture {
-            print("here")
+            //
         }
         .gesture(DragGesture()
             .onChanged { value in
@@ -178,13 +167,11 @@ struct GridCell: View {
                  
             .onEnded { value in
                 if GridCM.isSwiped {
-                    withAnimation (.spring(response: 0.5)) {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                             GotLikeVM.itemRemove(index: index)
                             GridCM.isSwiped = false
                             print(GotLikeVM.profiles.count)
                         }
-                    }
                 }
             }
                  
