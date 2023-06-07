@@ -92,7 +92,7 @@ struct GridCell: View {
     @GestureVelocity private var velocity: CGVector
     @State var disableDownloads: Bool = false
     @State var isRotate: Bool = false
-    @State var isTopItem: Bool = false
+    @State var isFrontItem: Bool = false
     
     var body: some View {
         VStack(spacing: 0){
@@ -153,7 +153,7 @@ struct GridCell: View {
         }
         .offset(currentOffset)
         .rotationEffect(isRotate ? Angle(degrees: -8) : Angle(degrees: 0))
-        .zIndex(isTopItem ? 8 : 0)
+        .zIndex(isFrontItem ? 8 : 0)
 
         .onTapGesture {
             //
@@ -163,28 +163,7 @@ struct GridCell: View {
                 
                 currentOffset = value.translation
                 isRotate = true
-                isTopItem = true
-                
-//                if value.translation.width < -20.0 {
-//
-//                    print(value.translation, "Left Gesture")
-//                    withAnimation (.spring(blendDuration: 2.0)) {
-//                        self.GridCM.offset.x = value.translation.width - 200
-//                        GridCM.isSwiped = true
-//                    }
-//
-//                } else if 20.0 < value.translation.width {
-//                    withAnimation (.spring(response: 0.15, blendDuration: 0.5) ){
-//                        print(value.translation, "Right Gesture")
-//                        self.GridCM.offset.x = value.location.x - 75
-////                        self.GridCM.offset.y = value.location.y
-//                    }
-//
-//                } else {
-//
-//                    print(value.translation, "3")
-//                }
-                
+                isFrontItem = true
             }
                  
             .onEnded { value in
@@ -199,53 +178,70 @@ struct GridCell: View {
                     dy: velocity.dy / distance.height
                 )
                 
-                withAnimation(.interpolatingSpring(mass: 1, stiffness: 50, damping: 20, initialVelocity: mappedVelocity.dx)) {
-                    
-                    print("velocity: \(velocity)")
-                    print("currentOffset: \(currentOffset)")
-                    print("mappedVelocity: \(mappedVelocity)")
-                    
-                    if velocity.dx < 0 { // swipe 実行条件
-                        print(mappedVelocity.dx)
+                // x方向のアニメーション
+                withAnimation(.interpolatingSpring(
+                    mass: 1, stiffness: 50, damping: 20, initialVelocity: mappedVelocity.dx)) {
                         
-                        currentOffset.width = currentOffset.width - 340
+                        print("velocity.dx: \(velocity.dx)")
+                        print("location: \(value.location)")
+                        let screenWidth = UIScreen.main.bounds.width
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            GotLikeVM.itemRemove(index: index)
+                        if velocity.dx < -150 {
+                            // swipe 実行条件①：velocity
+                            
+                            //「予想される移動距離」と「画面サイズの半分」のうち、大きい方を採用
+                            if -value.predictedEndTranslation.width > screenWidth/2 {
+                                
+                                currentOffset.width = value.predictedEndTranslation.width
+                                
+                            } else {
+                                currentOffset.width = currentOffset.width - (screenWidth/2 + 100)
+                            }
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                GotLikeVM.itemRemove(index: index)
+                            }
+                            
+                        } else if screenWidth/2 < abs(currentOffset.width) {
+                            // swipe 実行条件②：アイテムを離した時の currentOffset
+
+                            currentOffset.width = (currentOffset.width - (screenWidth/2 + 100))
+
+                            print(currentOffset.width)
+
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                GotLikeVM.itemRemove(index: index)
+                            }
+
+                        } else {
+                            // cancel
+                            currentOffset = .zero
+                            isRotate = false
+                            isFrontItem = false
+                    
                         }
+                    }
+                
+                // y方向のアニメーション
+                withAnimation(.interpolatingSpring(
+                    mass: 1, stiffness: 50, damping: 20, initialVelocity: mappedVelocity.dx)) {
+                    if velocity.dx < -150 { // swipe 実行条件 実機検証で調整
                         
-                    } else {
-                        // cancel
-                        currentOffset = .zero
-                        isRotate = false
-                        isTopItem = false
-                        
+                        if abs(value.predictedEndTranslation.height) > UIScreen.main.bounds.height/2 {
+                            currentOffset.height = value.predictedEndTranslation.height
+                          
+                        } else {
+                            currentOffset.height = currentOffset.height - UIScreen.main.bounds.height/2
+                            
+                        }
+        
                     }
                 }
                 
-//                withAnimation(.interpolatingSpring(mass: 5, stiffness: 50, damping: 50, initialVelocity: mappedVelocity.dy)) {
-//
-//                    print(mappedVelocity)
-//
-//                    if mappedVelocity.dx < 0 { // true に条件
-//                        print(mappedVelocity.dy)
-//                        currentOffset.width = 100 * mappedVelocity.dx
-//                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//                            GotLikeVM.itemRemove(index: index)
-//                        }
-//
-//                    } else {
-//                        // cancel
-//                        currentOffset = .zero
-//
-//                    }
-//                }
             }
             .updatingVelocity($velocity)
                  
-        
         )
-        
     }
     
     private func downloadImage(_ url: URL) {
