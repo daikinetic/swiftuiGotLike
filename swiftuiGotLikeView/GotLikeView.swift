@@ -100,7 +100,7 @@ struct GridCell: View {
                     }
                         .aspectRatio( 155.5/220, contentMode: .fit)
                         .cornerRadius(20)
-                        .frame(width: 155.5, height: 225)
+                        .frame(width: 155.5, height: 220)
                     
                     Image("star-pairs")
                         .renderingMode(.template)
