@@ -207,8 +207,6 @@ struct GridCell: View {
 
                             currentOffset.width = (currentOffset.width - (screenWidth/2 + 100))
 
-                            print(currentOffset.width)
-
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                 GotLikeVM.itemRemove(index: index)
                             }
