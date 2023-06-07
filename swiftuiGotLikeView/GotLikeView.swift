@@ -37,7 +37,7 @@ struct GotLikeView: View {
                     .aspectRatio(contentMode:.fit)
                     .frame(width: 30, height: 30)
                     .padding(.trailing, 10)
-                    
+                
             }
             .padding(.bottom, 15)
             .padding(.horizontal, 24)
@@ -58,7 +58,7 @@ struct GotLikeView: View {
                 }
                 .animation(.spring(), value: GotLikeVM.profiles)
                 .padding(.horizontal, 20)
-
+                
             }
             .refreshable {
                 await Task.sleep(1000000000)
@@ -103,9 +103,9 @@ struct GridCell: View {
                     } placeholder: {
                         ProgressView()
                     }
-                        .aspectRatio(155.5/220, contentMode: .fit)
-                        .cornerRadius(20)
-                        .frame(width: 155.5, height: 220)
+                    .aspectRatio(155.5/220, contentMode: .fit)
+                    .cornerRadius(20)
+                    .frame(width: 155.5, height: 220)
                     
                     Image("star-pairs")
                         .renderingMode(.template)
@@ -122,10 +122,10 @@ struct GridCell: View {
                     .foregroundColor(.white)
                     .background(
                         LinearGradient(
-                        gradient: Gradient(colors: [Color(0xFF8F87),Color(0xFC6675)]),
-                        startPoint: .init(x: -0.8, y: -0.8),    // start地点
-                        endPoint: .init(x: 0.7, y: 0.7)     // end地点
-                    ))
+                            gradient: Gradient(colors: [Color(0xFF8F87),Color(0xFC6675)]),
+                            startPoint: .init(x: -0.8, y: -0.8),    // start地点
+                            endPoint: .init(x: 0.7, y: 0.7)     // end地点
+                        ))
                     .cornerRadius(16)
                     .padding(.bottom, 8)
                     .font(.system(size: 14, weight: .bold))
@@ -154,7 +154,7 @@ struct GridCell: View {
         .offset(currentOffset)
         .rotationEffect(isRotate ? Angle(degrees: -8) : Angle(degrees: 0))
         .zIndex(isFrontItem ? 8 : 0)
-
+        
         .onTapGesture {
             //
         }
@@ -204,37 +204,40 @@ struct GridCell: View {
                             
                         } else if screenWidth/2 < -currentOffset.width {
                             // swipe 実行条件②：アイテムを離した時の currentOffset
-
+                            
                             currentOffset.width = (currentOffset.width - (screenWidth/2 + 100))
-
+                            
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                 GotLikeVM.itemRemove(index: index)
                             }
-
+                            
                         } else {
                             // cancel
                             currentOffset = .zero
                             isRotate = false
                             isFrontItem = false
-                    
+                            
                         }
                     }
                 
                 // y方向のアニメーション
                 withAnimation(.interpolatingSpring(
                     mass: 1, stiffness: 50, damping: 20, initialVelocity: mappedVelocity.dx)) {
-                    if velocity.dx < -150 { // swipe 実行条件
                         
-                        if abs(value.predictedEndTranslation.height) > UIScreen.main.bounds.height/2 {
-                            currentOffset.height = value.predictedEndTranslation.height
-                          
-                        } else {
-                            currentOffset.height = currentOffset.height - UIScreen.main.bounds.height/2
+                        let screenHeight = UIScreen.main.bounds.height
+                        
+                        if velocity.dx < -150 { // swipe 実行条件
+                            
+                            if abs(value.predictedEndTranslation.height) > screenHeight/2 {
+                                currentOffset.height = value.predictedEndTranslation.height
+                                
+                            } else {
+                                currentOffset.height = currentOffset.height - screenHeight/2
+                                
+                            }
                             
                         }
-        
                     }
-                }
                 
             }
             .updatingVelocity($velocity)
@@ -245,22 +248,22 @@ struct GridCell: View {
     private func downloadImage(_ url: URL) {
         disableDownloads = true
         Task.detached {
-          let (data, _) = try await URLSession.shared.data(
-            from: url
-          )
-          let image: UIImage = try .init(data: data)!
-          if #available(iOS 16.0, *) {
-            try await Task.sleep(for: .seconds(3))
-          }
-          else {
-            try await Task.sleep(nanoseconds: .init(3 * 1_000_000_000))
-          }
-          await MainActor.run {
-            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-              self.disableDownloads = false
-          }
+            let (data, _) = try await URLSession.shared.data(
+                from: url
+            )
+            let image: UIImage = try .init(data: data)!
+            if #available(iOS 16.0, *) {
+                try await Task.sleep(for: .seconds(3))
+            }
+            else {
+                try await Task.sleep(nanoseconds: .init(3 * 1_000_000_000))
+            }
+            await MainActor.run {
+                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                self.disableDownloads = false
+            }
         }
-      }
+    }
 }
 
 extension Color {
@@ -298,13 +301,13 @@ extension ScrollView {
 }
 
 extension Color {
-  init(_ hex: UInt, alpha: Double = 1) {
-    self.init(
-      .sRGB,
-      red: Double((hex >> 16) & 0xFF) / 255,
-      green: Double((hex >> 8) & 0xFF) / 255,
-      blue: Double(hex & 0xFF) / 255,
-      opacity: alpha
-    )
-  }
+    init(_ hex: UInt, alpha: Double = 1) {
+        self.init(
+            .sRGB,
+            red: Double((hex >> 16) & 0xFF) / 255,
+            green: Double((hex >> 8) & 0xFF) / 255,
+            blue: Double(hex & 0xFF) / 255,
+            opacity: alpha
+        )
+    }
 }
