@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIGestureVelocity
 import SwiftUISnapDraggingModifier
 
 
@@ -87,6 +88,7 @@ struct GridCell: View {
     let index: Int
     
     @State var currentOffset: CGSize = .zero
+    @GestureVelocity private var velocity: CGVector
     @State var disableDownloads: Bool = false
     
     var body: some View {
@@ -98,7 +100,7 @@ struct GridCell: View {
                     } placeholder: {
                         ProgressView()
                     }
-                        .aspectRatio( 155.5/220, contentMode: .fit)
+                        .aspectRatio(155.5/220, contentMode: .fit)
                         .cornerRadius(20)
                         .frame(width: 155.5, height: 220)
                     
@@ -180,12 +182,27 @@ struct GridCell: View {
                  
             .onEnded { value in
                 
-//                withAnimation(.spring()) {
-
-                withAnimation(.interpolatingSpring(mass: 5, stiffness: 200, damping: 50, initialVelocity: 60)) {
-                    if true { // true に条件
+                let distance = CGSize(
+                    width: -currentOffset.width,
+                    height: -currentOffset.height
+                )
+                
+                let mappedVelocity = CGVector(
+                    dx: velocity.dx / distance.width,
+                    dy: velocity.dy / distance.height
+                )
+                
+                withAnimation(.interpolatingSpring(mass: 1, stiffness: 50, damping: 20, initialVelocity: mappedVelocity.dx)) {
+                    
+                    print("velocity: \(velocity)")
+                    print("currentOffset: \(currentOffset)")
+                    print("mappedVelocity: \(mappedVelocity)")
+                    
+                    if velocity.dx < 0 { // true に条件
+                        print(mappedVelocity.dx)
                         
-                        currentOffset.width = -200
+                        currentOffset.width = currentOffset.width - 340
+                        
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             GotLikeVM.itemRemove(index: index)
                         }
@@ -196,20 +213,26 @@ struct GridCell: View {
                         
                     }
                 }
-//                }
                 
-//                if GridCM.isSwiped {
-//                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+//                withAnimation(.interpolatingSpring(mass: 5, stiffness: 50, damping: 50, initialVelocity: mappedVelocity.dy)) {
+//
+//                    print(mappedVelocity)
+//
+//                    if mappedVelocity.dx < 0 { // true に条件
+//                        print(mappedVelocity.dy)
+//                        currentOffset.width = 100 * mappedVelocity.dx
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
 //                            GotLikeVM.itemRemove(index: index)
-//                            GridCM.isSwiped = false
-//                            print(GotLikeVM.profiles.count)
 //                        }
-//                } else {
-//                    withAnimation (.spring(response: 0.5, blendDuration: 0.5)) {
-//                        self.GridCM.offset.x = .zero
+//
+//                    } else {
+//                        // cancel
+//                        currentOffset = .zero
+//
 //                    }
 //                }
             }
+            .updatingVelocity($velocity)
                  
         
         )

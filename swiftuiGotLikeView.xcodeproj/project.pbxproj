@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6543791F2A304210007575FD /* SwiftUIGestureVelocity in Frameworks */ = {isa = PBXBuildFile; productRef = 6543791E2A304210007575FD /* SwiftUIGestureVelocity */; };
 		65A53B032A25ED5400CF3BCE /* swiftuiGotLikeViewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A53B022A25ED5400CF3BCE /* swiftuiGotLikeViewApp.swift */; };
 		65A53B052A25ED5400CF3BCE /* GotLikeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A53B042A25ED5400CF3BCE /* GotLikeView.swift */; };
 		65A53B072A25ED5500CF3BCE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65A53B062A25ED5500CF3BCE /* Assets.xcassets */; };
@@ -55,6 +56,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				65BF72DB2A276DBD0011C913 /* SwiftUISnapDraggingModifier in Frameworks */,
+				6543791F2A304210007575FD /* SwiftUIGestureVelocity in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,6 +152,7 @@
 			name = swiftuiGotLikeView;
 			packageProductDependencies = (
 				65BF72DA2A276DBD0011C913 /* SwiftUISnapDraggingModifier */,
+				6543791E2A304210007575FD /* SwiftUIGestureVelocity */,
 			);
 			productName = swiftuiGotLikeView;
 			productReference = 65A53AFF2A25ED5400CF3BCE /* swiftuiGotLikeView.app */;
@@ -225,6 +228,7 @@
 			mainGroup = 65A53AF62A25ED5400CF3BCE;
 			packageReferences = (
 				65BF72D92A276DBD0011C913 /* XCRemoteSwiftPackageReference "swiftui-snap-dragging-modifier" */,
+				6543791D2A304210007575FD /* XCRemoteSwiftPackageReference "swiftui-gesture-velocity" */,
 			);
 			productRefGroup = 65A53B002A25ED5400CF3BCE /* Products */;
 			projectDirPath = "";
@@ -591,6 +595,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		6543791D2A304210007575FD /* XCRemoteSwiftPackageReference "swiftui-gesture-velocity" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/FluidGroup/swiftui-gesture-velocity";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		65BF72D92A276DBD0011C913 /* XCRemoteSwiftPackageReference "swiftui-snap-dragging-modifier" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/FluidGroup/swiftui-snap-dragging-modifier";
@@ -602,6 +614,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		6543791E2A304210007575FD /* SwiftUIGestureVelocity */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6543791D2A304210007575FD /* XCRemoteSwiftPackageReference "swiftui-gesture-velocity" */;
+			productName = SwiftUIGestureVelocity;
+		};
 		65BF72DA2A276DBD0011C913 /* SwiftUISnapDraggingModifier */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 65BF72D92A276DBD0011C913 /* XCRemoteSwiftPackageReference "swiftui-snap-dragging-modifier" */;

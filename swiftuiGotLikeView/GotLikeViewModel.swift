@@ -24,7 +24,7 @@ class GotLikeViewModel : ObservableObject {
             print("index: \(index)")
             _ = profiles.remove(at: index)
             _ = deletedProfiles.append(profiles[index])
-            print(deletedProfiles)
+//            print(deletedProfiles)
     }
     
     private func downloadImage(_ url: URL) {
@@ -56,7 +56,7 @@ class GotLikeViewModel : ObservableObject {
     
     static var Profiles = [
         Profile(nickname: "さえこ", age: 22, residence: "東京", image: "https://images.unsplash.com/photo-1508216310976-c518daae0cdc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjEwOTQ4Ng&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
-        Profile(nickname: "Jackson", age: 23, residence: "千葉", image: "https://images.unsplash.com/photo-1472849676747-48a51c0c30b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjEwOTUzMw&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
+        Profile(nickname: "Jackson", age: 23, residence: "千葉", image: "https://images.unsplash.com/photo-1519872775884-29a6fea271ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjAyNzA4OQ&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
         Profile(nickname: "Johns", age: 24, residence: "東京", image: "https://images.unsplash.com/photo-1541519481457-763224276691?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjEwOTU2Mg&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
         Profile(nickname: "Jack", age: 25, residence: "千葉", image: "https://images.unsplash.com/photo-1531256456869-ce942a665e80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjEwOTU5OQ&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
         Profile(nickname: "Sam", age: 26, residence: "千葉", image: "https://github.com/daikinetic/numeron/assets/97176797/df504c25-a99b-465c-8322-e3d459af8d30"),
@@ -67,7 +67,7 @@ class GotLikeViewModel : ObservableObject {
         Profile(nickname: "Hakkel", age: 31, residence: "千葉", image: "https://images.unsplash.com/photo-1512646605205-78422b7c7896?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjEwOTc4MQ&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
         Profile(nickname: "Nan", age: 32, residence: "千葉", image: "https://images.unsplash.com/photo-1519872775884-29a6fea271ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjEwOTcxNg&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
         Profile(nickname: "Nin", age: 33, residence: "東京", image: "https://images.unsplash.com/photo-1469504484373-b23e7ba83aa5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjEwOTcwMw&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
-        Profile(nickname: "Him", age: 34, residence: "東京", image: "https://images.unsplash.com/photo-1532170579297-281918c8ae72?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjEwOTY3OA&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
+        Profile(nickname: "Him", age: 34, residence: "東京", image: "https://images.unsplash.com/photo-1508216310976-c518daae0cdc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjEwOTQ4Ng&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
         Profile(nickname: "Json", age: 35, residence: "千葉", image: "https://images.unsplash.com/photo-1591089079607-73a2d0343394?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjEwOTY1Nw&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
         Profile(nickname: "Jasmin", age: 36, residence: "東京", image: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjEwOTYzMw&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
     ]
