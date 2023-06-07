@@ -202,7 +202,7 @@ struct GridCell: View {
                                 GotLikeVM.itemRemove(index: index)
                             }
                             
-                        } else if screenWidth/2 < abs(currentOffset.width) {
+                        } else if screenWidth/2 < -currentOffset.width {
                             // swipe 実行条件②：アイテムを離した時の currentOffset
 
                             currentOffset.width = (currentOffset.width - (screenWidth/2 + 100))
