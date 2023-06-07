@@ -182,7 +182,7 @@ struct GridCell: View {
                 withAnimation(.interpolatingSpring(
                     mass: 1, stiffness: 50, damping: 20, initialVelocity: mappedVelocity.dx)) {
                         
-                        print("velocity.dx: \(velocity.dx)")
+                        print("velocity: \(velocity)")
                         
                         let screenWidth = UIScreen.main.bounds.width
                         
