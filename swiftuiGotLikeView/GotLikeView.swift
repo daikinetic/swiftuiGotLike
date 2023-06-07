@@ -24,18 +24,16 @@ struct GotLikeView: View {
         VStack {
             HStack (alignment: .center) {
                 Text("お相手からのいいね：\(GotLikeVM.profiles.count)")
-                    .font(.body)
+                    .font(.system(size: 15, weight: .regular))
                     .foregroundColor(.white)
                     .padding(EdgeInsets(top: 10, leading: 28, bottom: 10, trailing: 28))
-                    .background(.gray)
+                    .background(Color(0x00AEC2))
                     .cornerRadius(20)
                 Spacer()
-                Image(systemName: "line.3.horizontal")
-                    .renderingMode(.template)
+                Image("detail-pairs")
                     .resizable()
                     .aspectRatio(contentMode:.fit)
                     .frame(width: 30, height: 30)
-                    .foregroundColor(.gray)
                     .padding(.trailing, 10)
                     
             }
@@ -51,6 +49,7 @@ struct GotLikeView: View {
                             nickname: profile.nickname,
                             age: profile.age,
                             residence: profile.residence,
+                            image: profile.image,
                             index: index
                         )
                     }
@@ -84,101 +83,158 @@ struct GridCell: View {
     let nickname: String
     let age: Int
     let residence: String
+    var image: String
     let index: Int
-
+    
+    @State var currentOffset: CGSize = .zero
+    @State var disableDownloads: Bool = false
+    
     var body: some View {
-        VStack {
+        VStack(spacing: 0){
             ZStack(alignment: .bottom) {
                 ZStack (alignment: .topTrailing){
-                    Image("blackSheet")
-                        .resizable()
-                        .aspectRatio( 160/225, contentMode: .fill)
+                    AsyncImage(url: URL(string: image)) { image in
+                        image.resizable()
+                    } placeholder: {
+                        ProgressView()
+                    }
+                        .aspectRatio( 155.5/220, contentMode: .fit)
                         .cornerRadius(20)
-                        .frame(width: 160, height: 225)
+                        .frame(width: 155.5, height: 225)
                     
-                    Image(systemName: "star")
+                    Image("star-pairs")
                         .renderingMode(.template)
                         .resizable()
                         .aspectRatio(contentMode:.fit)
-                        .frame(width: 18, height: 18)
+                        .frame(height: 16)
                         .foregroundColor(.white)
-                        .padding(.top, 12)
-                        .padding(.trailing, 12)
+                        .padding(.top, 10)
+                        .padding(.trailing, 9)
                 }
                 Text(message)
                     .frame(width:130)
                     .padding(.vertical, 10)
                     .foregroundColor(.white)
-                    .background(.pink)
+                    .background(
+                        LinearGradient(
+                        gradient: Gradient(colors: [Color(0xFF8F87),Color(0xFC6675)]),
+                        startPoint: .init(x: -0.8, y: -0.8),    // start地点
+                        endPoint: .init(x: 0.7, y: 0.7)     // end地点
+                    ))
                     .cornerRadius(16)
-                    .padding(.bottom, 10)
-                    .font(.callout)
+                    .padding(.bottom, 8)
+                    .font(.system(size: 14, weight: .bold))
             }
+            .padding(.bottom, 8)
             
-            VStack {
+            VStack (spacing: 0){
                 Text(nickname)
                     .padding(.bottom, -5)
                     .fontWeight(.bold)
-                    .font(.callout)
-                HStack {
+                    .font(.system(size: 14, weight: .heavy))
+                    .padding(.bottom, 6)
+                HStack(spacing: 4){
                     Circle()
-                        .frame(width: 10, height: 10)
-                        .foregroundColor(.green)
+                        .frame(width: 8, height: 8)
+                        .foregroundColor(Color(0x56C076))
                     Text("\(age)歳")
                         .foregroundColor(.gray)
-                        .font(.callout)
+                        .font(.system(size: 14, weight: .regular))
                     Text(residence)
                         .foregroundColor(.gray)
-                        .font(.callout)
+                        .font(.system(size: 14, weight: .regular))
                 }
             }
         }
-        .offset(x: GridCM.offset.x)
+        .offset(currentOffset)
+//        .offset(x: GridCM.offset.x, y: GridCM.offset.y)
         .onTapGesture {
             //
         }
         .gesture(DragGesture()
             .onChanged { value in
-               
-                if value.translation.height < -30 || 30.0 < value.translation.height {
-                    print(value.translation, "1")
-                    
-                    
-                } else if value.translation.width < -20.0 {
-                    
-                    print(value.translation, "2")
-                    withAnimation (.easeOut) {
-                        self.GridCM.offset.x = value.location.x - 250
-                        GridCM.isSwiped = true
-                    }
-                    
-                } else if 20.0 < value.translation.width {
-                    
-                    print(value.translation, "3")
-                    withAnimation (.easeOut) {
-                        self.GotLikeVM.offset.x = value.location.x
-                    }
-                    
-                } else {
-                   
-                    print(value.translation, "4")
-                }
+                
+                currentOffset = value.translation
+                
+//                if value.translation.width < -20.0 {
+//
+//                    print(value.translation, "Left Gesture")
+//                    withAnimation (.spring(blendDuration: 2.0)) {
+//                        self.GridCM.offset.x = value.translation.width - 200
+//                        GridCM.isSwiped = true
+//                    }
+//
+//                } else if 20.0 < value.translation.width {
+//                    withAnimation (.spring(response: 0.15, blendDuration: 0.5) ){
+//                        print(value.translation, "Right Gesture")
+//                        self.GridCM.offset.x = value.location.x - 75
+////                        self.GridCM.offset.y = value.location.y
+//                    }
+//
+//                } else {
+//
+//                    print(value.translation, "3")
+//                }
+                
             }
                  
             .onEnded { value in
-                if GridCM.isSwiped {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                
+//                withAnimation(.spring()) {
+
+                withAnimation(.interpolatingSpring(mass: 5, stiffness: 200, damping: 50, initialVelocity: 60)) {
+                    if true { // true に条件
+                        
+                        currentOffset.width = -200
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             GotLikeVM.itemRemove(index: index)
-                            GridCM.isSwiped = false
-                            print(GotLikeVM.profiles.count)
                         }
+                        
+                    } else {
+                        // cancel
+                        currentOffset = .zero
+                        
+                    }
                 }
+//                }
+                
+//                if GridCM.isSwiped {
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+//                            GotLikeVM.itemRemove(index: index)
+//                            GridCM.isSwiped = false
+//                            print(GotLikeVM.profiles.count)
+//                        }
+//                } else {
+//                    withAnimation (.spring(response: 0.5, blendDuration: 0.5)) {
+//                        self.GridCM.offset.x = .zero
+//                    }
+//                }
             }
                  
         
         )
         
     }
+    
+    private func downloadImage(_ url: URL) {
+        disableDownloads = true
+        Task.detached {
+          let (data, _) = try await URLSession.shared.data(
+            from: url
+          )
+          let image: UIImage = try .init(data: data)!
+          if #available(iOS 16.0, *) {
+            try await Task.sleep(for: .seconds(3))
+          }
+          else {
+            try await Task.sleep(nanoseconds: .init(3 * 1_000_000_000))
+          }
+          await MainActor.run {
+            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+              self.disableDownloads = false
+          }
+        }
+      }
 }
 
 extension Color {
@@ -213,4 +269,16 @@ extension ScrollView {
     func refreshable(action: @escaping @Sendable () async -> Void) -> some View {
         modifier(RefreshableModifier(action: action))
     }
+}
+
+extension Color {
+  init(_ hex: UInt, alpha: Double = 1) {
+    self.init(
+      .sRGB,
+      red: Double((hex >> 16) & 0xFF) / 255,
+      green: Double((hex >> 8) & 0xFF) / 255,
+      blue: Double(hex & 0xFF) / 255,
+      opacity: alpha
+    )
+  }
 }
