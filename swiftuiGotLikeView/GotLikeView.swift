@@ -187,7 +187,7 @@ struct GridCell: View {
                         let screenWidth = UIScreen.main.bounds.width
                         
                         if velocity.dx < -150 {
-                            // swipe 実行条件①：velocity
+                            // swipe 実行条件①：velocity　 TODO：実機検証で数字を調整
                             
                             //「予想される移動距離」と「画面サイズの半分」のうち、大きい方を採用
                             if -value.predictedEndTranslation.width > screenWidth/2 {
@@ -223,7 +223,7 @@ struct GridCell: View {
                 // y方向のアニメーション
                 withAnimation(.interpolatingSpring(
                     mass: 1, stiffness: 50, damping: 20, initialVelocity: mappedVelocity.dx)) {
-                    if velocity.dx < -150 { // swipe 実行条件 実機検証で調整
+                    if velocity.dx < -150 { // swipe 実行条件
                         
                         if abs(value.predictedEndTranslation.height) > UIScreen.main.bounds.height/2 {
                             currentOffset.height = value.predictedEndTranslation.height
