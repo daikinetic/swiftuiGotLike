@@ -30,6 +30,7 @@ struct GotLikeView: View {
                     .padding(EdgeInsets(top: 10, leading: 28, bottom: 10, trailing: 28))
                     .background(Color(0x00AEC2))
                     .cornerRadius(20)
+                    .padding(.leading, 10)
                 Spacer()
                 Image("detail-pairs")
                     .resizable()
@@ -39,7 +40,7 @@ struct GotLikeView: View {
                     
             }
             .padding(.bottom, 15)
-            .padding(.horizontal, 15)
+            .padding(.horizontal, 24)
             
             ScrollView (.vertical, showsIndicators: false) {
                 LazyVGrid (columns: columns, spacing: 24){
@@ -56,13 +57,13 @@ struct GotLikeView: View {
                     }
                 }
                 .animation(.spring(), value: GotLikeVM.profiles)
+                .padding(.horizontal, 20)
 
             }
             .refreshable {
                 await Task.sleep(1000000000)
             }
         }
-        .padding(.horizontal, 15)
         .padding(.vertical, 10)
     }
 }
@@ -90,6 +91,8 @@ struct GridCell: View {
     @State var currentOffset: CGSize = .zero
     @GestureVelocity private var velocity: CGVector
     @State var disableDownloads: Bool = false
+    @State var isRotate: Bool = false
+    @State var isTopItem: Bool = false
     
     var body: some View {
         VStack(spacing: 0){
@@ -149,7 +152,9 @@ struct GridCell: View {
             }
         }
         .offset(currentOffset)
-//        .offset(x: GridCM.offset.x, y: GridCM.offset.y)
+        .rotationEffect(isRotate ? Angle(degrees: -8) : Angle(degrees: 0))
+        .zIndex(isTopItem ? 8 : 0)
+
         .onTapGesture {
             //
         }
@@ -157,6 +162,8 @@ struct GridCell: View {
             .onChanged { value in
                 
                 currentOffset = value.translation
+                isRotate = true
+                isTopItem = true
                 
 //                if value.translation.width < -20.0 {
 //
@@ -198,7 +205,7 @@ struct GridCell: View {
                     print("currentOffset: \(currentOffset)")
                     print("mappedVelocity: \(mappedVelocity)")
                     
-                    if velocity.dx < 0 { // true に条件
+                    if velocity.dx < 0 { // swipe 実行条件
                         print(mappedVelocity.dx)
                         
                         currentOffset.width = currentOffset.width - 340
@@ -210,6 +217,8 @@ struct GridCell: View {
                     } else {
                         // cancel
                         currentOffset = .zero
+                        isRotate = false
+                        isTopItem = false
                         
                     }
                 }
