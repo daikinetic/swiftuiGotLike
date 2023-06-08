@@ -170,8 +170,8 @@ struct GridCell: View {
             .onEnded { value in
                 
                 let distance = CGSize(
-                    width: -currentOffset.width,
-                    height: -currentOffset.height
+                    width: currentOffset.width,
+                    height: currentOffset.height
                 )
                 
                 let mappedVelocity = CGVector(
@@ -182,12 +182,12 @@ struct GridCell: View {
                 let screenWidth = UIScreen.main.bounds.width
 
                 let mass: Double = 1
-                let stiffness: Double = 170
-                let damping: Double = 15
+                let stiffness: Double = 50
+                let damping: Double = 20
 
                 // x方向のアニメーション
                 withAnimation(.interpolatingSpring(
-//                    mass: mass,
+                    mass: mass,
                     stiffness: stiffness,
                     damping: damping,
                     initialVelocity: mappedVelocity.dx
@@ -195,9 +195,8 @@ struct GridCell: View {
                         
                         print("velocity: \(velocity)")
                         print("mappedVelocity \(mappedVelocity)")
-                        //                        print
                         
-                        if value.predictedEndTranslation.width < -1 * screenWidth / 2 {
+                        if value.predictedEndTranslation.width < -1 * screenWidth / 3 {
 
                             currentOffset.width = value.predictedEndTranslation.width * 2
 
@@ -216,13 +215,13 @@ struct GridCell: View {
 
                 // y方向のアニメーション
                 withAnimation(.interpolatingSpring(
-//                    mass: mass,
+                    mass: mass,
                     stiffness: stiffness,
                     damping: damping,
                     initialVelocity: mappedVelocity.dy
                 )) {
                         
-                        if value.predictedEndTranslation.width < -1 * screenWidth / 2 {
+                        if value.predictedEndTranslation.width < -1 * screenWidth / 3 {
 
                             currentOffset.height = value.predictedEndTranslation.height * 2
                         }
