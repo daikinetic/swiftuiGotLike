@@ -222,7 +222,7 @@ struct GridCell: View {
                 
                 // y方向のアニメーション
                 withAnimation(.interpolatingSpring(
-                    mass: 1, stiffness: 50, damping: 20, initialVelocity: mappedVelocity.dx)) {
+                    mass: 1, stiffness: 50, damping: 20, initialVelocity: mappedVelocity.dy)) {
                         
                         let screenHeight = UIScreen.main.bounds.height
                         
