@@ -153,7 +153,7 @@ struct GridCell: View {
             }
         }
         .offset(currentOffset)
-        .rotationEffect(isRotate ? Angle(degrees: -8) : Angle(degrees: 0))
+//        .rotationEffect(isRotate ? Angle(degrees: -8) : Angle(degrees: 0))
         .zIndex(isFrontItem ? 8 : 0)
         
         .onTapGesture {
@@ -178,81 +178,53 @@ struct GridCell: View {
                     dx: velocity.dx / distance.width,
                     dy: velocity.dy / distance.height
                 )
-                
+
+                let screenWidth = UIScreen.main.bounds.width
+
+                let mass: Double = 1
+                let stiffness: Double = 170
+                let damping: Double = 15
+
                 // x方向のアニメーション
                 withAnimation(.interpolatingSpring(
-                    mass: 1, stiffness: 50, damping: 20, initialVelocity: mappedVelocity.dx)) {
+//                    mass: mass,
+                    stiffness: stiffness,
+                    damping: damping,
+                    initialVelocity: mappedVelocity.dx
+                )) {
                         
                         print("velocity: \(velocity)")
                         print("mappedVelocity \(mappedVelocity)")
-//                        print
+                        //                        print
                         
-                        let screenWidth = UIScreen.main.bounds.width
-                        
-                        var isLeftItem: Bool
-                        var isRightItem: Bool
-                        
-                        print("value.startLocation: \(value.startLocation)")
-                        
-                        if abs(value.startLocation.x) < screenWidth/2 {
-                            isLeftItem = true
-                            isRightItem = false
-                        } else {
-                            isRightItem = true
-                            isLeftItem = false
-                        }
-                     
-                        
-                        if velocity.dx < -150 {
-                            // swipe 実行条件①：velocity　 TODO：実機検証で数字を調整
-                            
-                            //「予想される移動距離」と「画面サイズの半分」のうち、大きい方を採用
-                            if -value.predictedEndTranslation.width > screenWidth/2 {
-                                
-                                currentOffset.width = value.predictedEndTranslation.width
-                                
-                            } else {
-                                currentOffset.width = currentOffset.width - (screenWidth/2 + 100)
-                            }
-                            
+                        if value.predictedEndTranslation.width < -1 * screenWidth / 2 {
+
+                            currentOffset.width = value.predictedEndTranslation.width * 2
+
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                 GotLikeVM.itemRemove(index: index)
                             }
-                            
-                        } else if screenWidth/2 < -currentOffset.width {
-                            // swipe 実行条件②：アイテムを離した時の currentOffset
-                            
-                            currentOffset.width = (currentOffset.width - (screenWidth/2 + 100))
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                GotLikeVM.itemRemove(index: index)
-                            }
-                            
                         } else {
+
                             // cancel
                             currentOffset = .zero
                             isRotate = false
                             isFrontItem = false
-                            
                         }
+
                     }
-                
+
                 // y方向のアニメーション
                 withAnimation(.interpolatingSpring(
-                    mass: 1, stiffness: 50, damping: 20, initialVelocity: mappedVelocity.dy)) {
+//                    mass: mass,
+                    stiffness: stiffness,
+                    damping: damping,
+                    initialVelocity: mappedVelocity.dy
+                )) {
                         
-                        let screenHeight = UIScreen.main.bounds.height
-                        
-                        if velocity.dx < -150 { // swipe 実行条件
-                            
-                            if abs(value.predictedEndTranslation.height) > screenHeight/2 {
-                                currentOffset.height = value.predictedEndTranslation.height
-                                
-                            } else {
-                                currentOffset.height = currentOffset.height - screenHeight/2
-                                
-                            }
-                            
+                        if value.predictedEndTranslation.width < -1 * screenWidth / 2 {
+
+                            currentOffset.height = value.predictedEndTranslation.height * 2
                         }
                     }
                 
