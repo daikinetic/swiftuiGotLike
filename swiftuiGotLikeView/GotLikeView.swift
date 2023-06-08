@@ -60,6 +60,7 @@ struct GotLikeView: View {
                 .padding(.horizontal, 20)
                 
             }
+            .frame(maxHeight: .infinity)
             .refreshable {
                 await Task.sleep(1000000000)
             }
@@ -183,8 +184,24 @@ struct GridCell: View {
                     mass: 1, stiffness: 50, damping: 20, initialVelocity: mappedVelocity.dx)) {
                         
                         print("velocity: \(velocity)")
+                        print("mappedVelocity \(mappedVelocity)")
+//                        print
                         
                         let screenWidth = UIScreen.main.bounds.width
+                        
+                        var isLeftItem: Bool
+                        var isRightItem: Bool
+                        
+                        print("value.startLocation: \(value.startLocation)")
+                        
+                        if abs(value.startLocation.x) < screenWidth/2 {
+                            isLeftItem = true
+                            isRightItem = false
+                        } else {
+                            isRightItem = true
+                            isLeftItem = false
+                        }
+                     
                         
                         if velocity.dx < -150 {
                             // swipe 実行条件①：velocity　 TODO：実機検証で数字を調整

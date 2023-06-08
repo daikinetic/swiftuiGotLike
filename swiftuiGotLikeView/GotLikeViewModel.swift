@@ -14,7 +14,6 @@ class GridCellModel: ObservableObject {
 
 class GotLikeViewModel : ObservableObject {
     @Published var profiles: [Profile] = Profiles
-    @Published var deletedProfiles: [Profile] = []
     @Published var offset = CGPoint.zero
     @Published var isSwiped = false
     @State var disableDownloads: Bool = false
@@ -23,8 +22,6 @@ class GotLikeViewModel : ObservableObject {
             print("Delete: \(profiles[index].nickname)")
             print("index: \(index)")
             _ = profiles.remove(at: index)
-            _ = deletedProfiles.append(profiles[index])
-//            print(deletedProfiles)
     }
     
     private func downloadImage(_ url: URL) {
@@ -55,11 +52,12 @@ class GotLikeViewModel : ObservableObject {
 //        }
     
     static var Profiles = [
-        Profile(nickname: "さえこ", age: 22, residence: "東京", image: "https://images.unsplash.com/photo-1508216310976-c518daae0cdc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjEwOTQ4Ng&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
+        
+        Profile(nickname: "さえこ", age: 22, residence: "東京", image: "https://github.com/daikinetic/numeron/assets/97176797/df504c25-a99b-465c-8322-e3d459af8d30"),
         Profile(nickname: "Jackson", age: 23, residence: "千葉", image: "https://images.unsplash.com/photo-1519872775884-29a6fea271ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjAyNzA4OQ&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
         Profile(nickname: "Johns", age: 24, residence: "東京", image: "https://images.unsplash.com/photo-1541519481457-763224276691?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjEwOTU2Mg&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
         Profile(nickname: "Jack", age: 25, residence: "千葉", image: "https://images.unsplash.com/photo-1531256456869-ce942a665e80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjEwOTU5OQ&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
-        Profile(nickname: "Sam", age: 26, residence: "千葉", image: "https://github.com/daikinetic/numeron/assets/97176797/df504c25-a99b-465c-8322-e3d459af8d30"),
+        Profile(nickname: "Sam", age: 26, residence: "千葉", image: "https://images.unsplash.com/photo-1508216310976-c518daae0cdc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8d29tYW4sZmVtYWxlLHBvcnRyYWl0fHx8fHx8MTY4NjEwOTQ4Ng&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"),
         Profile(nickname: "Jami", age: 27, residence: "東京", image: "https://github.com/daikinetic/numeron/assets/97176797/95b1a2eb-ea76-4d24-9b20-e7841b30f579"),
         Profile(nickname: "Joy", age: 28, residence: "東京", image: "https://github.com/daikinetic/numeron/assets/97176797/a4030c13-eefe-437f-9b3a-e43c4e162178"),
         Profile(nickname: "Jay", age: 29, residence: "千葉", image: "https://github.com/daikinetic/numeron/assets/97176797/74acbd22-07b4-4cfa-ad68-cdd62ad6c472"),
