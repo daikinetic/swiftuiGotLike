@@ -116,6 +116,30 @@ struct GridCell: View {
                         .foregroundColor(.white)
                         .padding(.top, 10)
                         .padding(.trailing, 9)
+                        .overlay(alignment: .topTrailing) {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 20)
+                                    .frame(width: 155.5, height: 220)
+                                    .foregroundColor(.white.opacity(0))
+                                    .background(
+                                        LinearGradient(
+                                            gradient: Gradient(colors: [Color(0x000000).opacity(0.5),Color(0x000000).opacity(0)]),
+                                            startPoint: .init(x: 1, y: 0),    // start地点
+                                            endPoint: .init(x: 0, y: 1)     // end地点
+                                        ))
+                                .cornerRadius(20, style: .continuous)
+                                
+                                Image("nope")
+                                    .renderingMode(.template)
+                                    .resizable()
+                                    .aspectRatio(contentMode:.fit)
+                                    .frame(width: 36)
+                                    .foregroundColor(Color(0x96AAAA))
+                                    .offset(x: 30, y: -85)
+                                    .rotationEffect(Angle(degrees: 10))
+                            }
+                            .opacity(isRotate ? getOverlayAmount() : 0)
+                        }
                 }
                 Text(message)
                     .frame(width:130)
@@ -153,7 +177,7 @@ struct GridCell: View {
             }
         }
         .offset(currentOffset)
-//        .rotationEffect(isRotate ? Angle(degrees: -8) : Angle(degrees: 0))
+        .rotationEffect(isRotate ? Angle(degrees: getRotationAmount()) : Angle(degrees: 0))
         .zIndex(isFrontItem ? 8 : 0)
         
         .onTapGesture {
@@ -163,7 +187,9 @@ struct GridCell: View {
             .onChanged { value in
                 
                 currentOffset = value.translation
-                isRotate = true
+                if currentOffset.width < 0 {
+                    isRotate = true
+                }
                 isFrontItem = true
             }
                  
@@ -231,6 +257,34 @@ struct GridCell: View {
             .updatingVelocity($velocity)
                  
         )
+    }
+    
+    private func getOverlayAmount() -> Double {
+        let max = UIScreen.main.bounds.width / 4
+        let currentAmount = abs(currentOffset.width)
+        let percentage = currentAmount / max
+        let percentageAsDouble = Double(percentage)
+        let maxAngle: Double = 1
+        if percentage < 1 {
+            return percentageAsDouble * maxAngle
+        } else {
+            return 1
+        }
+    }
+    
+    private func getRotationAmount() -> Double {
+        withAnimation (.easeIn) {
+            let max = UIScreen.main.bounds.width / 4
+            let currentAmount = abs(currentOffset.width)
+            let percentage = currentAmount / max
+            let percentageAsDouble = Double(percentage)
+            let maxAngle: Double = 12
+            if percentage < 1 {
+                return percentageAsDouble * maxAngle * -1
+            } else {
+                return -12
+            }
+        }
     }
     
     private func downloadImage(_ url: URL) {
