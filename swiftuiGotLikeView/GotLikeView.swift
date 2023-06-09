@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftUIGestureVelocity
-import SwiftUISnapDraggingModifier
 
 struct GotLikeView: View {
     
