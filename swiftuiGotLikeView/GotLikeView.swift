@@ -9,12 +9,9 @@ import SwiftUI
 import SwiftUIGestureVelocity
 import SwiftUISnapDraggingModifier
 
-
-
 struct GotLikeView: View {
     
-    @StateObject var GotLikeVM = GotLikeViewModel()
-    @Namespace var namespace
+    @StateObject var gotLikeVM = GotLikeViewModel()
     
     var columns: [GridItem] = [
         GridItem(.flexible()),
@@ -24,7 +21,7 @@ struct GotLikeView: View {
     var body: some View {
         VStack {
             HStack (alignment: .center) {
-                Text("お相手からのいいね：\(GotLikeVM.profiles.count)")
+                Text("お相手からのいいね：\(gotLikeVM.profiles.count)")
                     .font(.system(size: 15, weight: .regular))
                     .foregroundColor(.white)
                     .padding(EdgeInsets(top: 10, leading: 28, bottom: 10, trailing: 28))
@@ -44,9 +41,9 @@ struct GotLikeView: View {
             
             ScrollView (.vertical, showsIndicators: false) {
                 LazyVGrid (columns: columns, spacing: 24){
-                    ForEach(Array(GotLikeVM.profiles.enumerated()), id: \.element) { index, profile in
+                    ForEach(Array(gotLikeVM.profiles.enumerated()), id: \.element) { index, profile in
                         GridCell(
-                            GotLikeVM: GotLikeVM,
+                            gotLikeVM: gotLikeVM,
                             message: profile.message,
                             nickname: profile.nickname,
                             age: profile.age,
@@ -56,7 +53,7 @@ struct GotLikeView: View {
                         )
                     }
                 }
-                .animation(.spring(), value: GotLikeVM.profiles)
+                .animation(.spring(), value: gotLikeVM.profiles)
                 .padding(.horizontal, 20)
                 
             }
@@ -77,9 +74,7 @@ struct ContentView_Previews: PreviewProvider {
 
 struct GridCell: View {
     
-    @ObservedObject var GotLikeVM: GotLikeViewModel
-    @ObservedObject var GridCM = GridCellModel()
-    @Namespace var namespace
+    @ObservedObject var gotLikeVM: GotLikeViewModel
     
     let id = UUID()
     let message: String
@@ -91,7 +86,6 @@ struct GridCell: View {
     
     @State var currentOffset: CGSize = .zero
     @GestureVelocity private var velocity: CGVector
-    @State var disableDownloads: Bool = false
     @State var isRotate: Bool = false
     @State var isFrontItem: Bool = false
     
@@ -127,7 +121,7 @@ struct GridCell: View {
                                             startPoint: .init(x: 1, y: 0),    // start地点
                                             endPoint: .init(x: 0, y: 1)     // end地点
                                         ))
-                                .cornerRadius(20, style: .continuous)
+                                    .cornerRadius(20, style: .continuous)
                                 
                                 Image("nope")
                                     .renderingMode(.template)
@@ -204,13 +198,13 @@ struct GridCell: View {
                     dx: velocity.dx / distance.width,
                     dy: velocity.dy / distance.height
                 )
-
+                
                 let screenWidth = UIScreen.main.bounds.width
-
+                
                 let mass: Double = 1
                 let stiffness: Double = 50
                 let damping: Double = 20
-
+                
                 // x方向のアニメーション
                 withAnimation(.interpolatingSpring(
                     mass: mass,
@@ -218,27 +212,27 @@ struct GridCell: View {
                     damping: damping,
                     initialVelocity: mappedVelocity.dx
                 )) {
+                    
+                    print("velocity: \(velocity)")
+                    print("mappedVelocity \(mappedVelocity)")
+                    
+                    if value.predictedEndTranslation.width < -1 * screenWidth / 3 {
                         
-                        print("velocity: \(velocity)")
-                        print("mappedVelocity \(mappedVelocity)")
+                        currentOffset.width = value.predictedEndTranslation.width * 2
                         
-                        if value.predictedEndTranslation.width < -1 * screenWidth / 3 {
-
-                            currentOffset.width = value.predictedEndTranslation.width * 2
-
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                GotLikeVM.itemRemove(index: index)
-                            }
-                        } else {
-
-                            // cancel
-                            currentOffset = .zero
-                            isRotate = false
-                            isFrontItem = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            gotLikeVM.itemRemove(index: index)
                         }
-
+                    } else {
+                        
+                        // cancel
+                        currentOffset = .zero
+                        isRotate = false
+                        isFrontItem = false
                     }
-
+                    
+                }
+                
                 // y方向のアニメーション
                 withAnimation(.interpolatingSpring(
                     mass: mass,
@@ -246,12 +240,12 @@ struct GridCell: View {
                     damping: damping,
                     initialVelocity: mappedVelocity.dy
                 )) {
+                    
+                    if value.predictedEndTranslation.width < -1 * screenWidth / 3 {
                         
-                        if value.predictedEndTranslation.width < -1 * screenWidth / 3 {
-
-                            currentOffset.height = value.predictedEndTranslation.height * 2
-                        }
+                        currentOffset.height = value.predictedEndTranslation.height * 2
                     }
+                }
                 
             }
             .updatingVelocity($velocity)
@@ -285,7 +279,7 @@ struct GridCell: View {
             let percentage = currentAmount / max
             let percentageAsDouble = Double(percentage)
             let maxAngle: Double = 12
-         
+            
             if currentOffset.width > 0 {
                 return 0
             } else if percentage < 1 {
@@ -296,16 +290,6 @@ struct GridCell: View {
         }
     }
     
-}
-
-extension Color {
-    static var random: Color {
-        return Color(
-            red: .random(in: 0...1),
-            green: .random(in: 0...1),
-            blue: .random(in: 0...1)
-        )
-    }
 }
 
 struct RefreshableModifier: ViewModifier {

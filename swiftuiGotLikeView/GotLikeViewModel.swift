@@ -24,33 +24,6 @@ class GotLikeViewModel : ObservableObject {
             _ = profiles.remove(at: index)
     }
     
-    private func downloadImage(_ url: URL) {
-        disableDownloads = true
-        Task.detached {
-          let (data, _) = try await URLSession.shared.data(
-            from: url
-          )
-          let image: UIImage = try .init(data: data)!
-          if #available(iOS 16.0, *) {
-            try await Task.sleep(for: .seconds(3))
-          }
-          else {
-            try await Task.sleep(nanoseconds: .init(3 * 1_000_000_000))
-          }
-          await MainActor.run {
-            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-              self.disableDownloads = false
-          }
-        }
-      }
-    
-    
-//        var list = []
-//        for i in 0...14 {
-//            var item = downloadImage(URL(string: "https://source.unsplash.com/random/?woman,female,portrait")!)
-//            list.append(item)
-//        }
-    
     static var Profiles = [
         
         Profile(nickname: "さえこ", age: 22, residence: "東京", image: "https://github.com/daikinetic/numeron/assets/97176797/df504c25-a99b-465c-8322-e3d459af8d30"),
