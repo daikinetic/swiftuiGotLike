@@ -260,26 +260,35 @@ struct GridCell: View {
     }
     
     private func getOverlayAmount() -> Double {
-        let max = UIScreen.main.bounds.width / 4
-        let currentAmount = abs(currentOffset.width)
-        let percentage = currentAmount / max
-        let percentageAsDouble = Double(percentage)
-        let maxAngle: Double = 1
-        if percentage < 1 {
-            return percentageAsDouble * maxAngle
-        } else {
-            return 1
+        withAnimation (.spring()) {
+            let max = UIScreen.main.bounds.width / 4
+            let currentAmount = abs(currentOffset.width)
+            let percentage = currentAmount / max
+            let percentageAsDouble = Double(percentage)
+            let maxAngle: Double = 1
+            
+            if currentOffset.width > 0 {
+                return 0
+            } else if percentage < 1 {
+                return percentageAsDouble * maxAngle
+            } else {
+                return 1
+            }
         }
+        
     }
     
     private func getRotationAmount() -> Double {
-        withAnimation (.easeIn) {
+        withAnimation (.spring()) {
             let max = UIScreen.main.bounds.width / 4
             let currentAmount = abs(currentOffset.width)
             let percentage = currentAmount / max
             let percentageAsDouble = Double(percentage)
             let maxAngle: Double = 12
-            if percentage < 1 {
+         
+            if currentOffset.width > 0 {
+                return 0
+            } else if percentage < 1 {
                 return percentageAsDouble * maxAngle * -1
             } else {
                 return -12
@@ -287,25 +296,6 @@ struct GridCell: View {
         }
     }
     
-    private func downloadImage(_ url: URL) {
-        disableDownloads = true
-        Task.detached {
-            let (data, _) = try await URLSession.shared.data(
-                from: url
-            )
-            let image: UIImage = try .init(data: data)!
-            if #available(iOS 16.0, *) {
-                try await Task.sleep(for: .seconds(3))
-            }
-            else {
-                try await Task.sleep(nanoseconds: .init(3 * 1_000_000_000))
-            }
-            await MainActor.run {
-                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                self.disableDownloads = false
-            }
-        }
-    }
 }
 
 extension Color {
