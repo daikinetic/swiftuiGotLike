@@ -12,6 +12,7 @@ import SwiftUISnapDraggingModifier
 struct GotLikeView: View {
     
     @StateObject var gotLikeVM = GotLikeViewModel()
+    @State var isBoldCount: Bool = false
     
     var columns: [GridItem] = [
         GridItem(.flexible()),
@@ -21,13 +22,20 @@ struct GotLikeView: View {
     var body: some View {
         VStack {
             HStack (alignment: .center) {
-                Text("お相手からのいいね：\(gotLikeVM.profiles.count)")
-                    .font(.system(size: 15, weight: .regular))
-                    .foregroundColor(.white)
-                    .padding(EdgeInsets(top: 10, leading: 28, bottom: 10, trailing: 28))
-                    .background(Color(0x00AEC2))
-                    .cornerRadius(20)
-                    .padding(.leading, 10)
+                
+                HStack (spacing: 0) {
+                    Text("お相手からのいいね：")
+                        .font(.system(size: 15, weight: .regular))
+                        .foregroundColor(.white)
+                    Text("\(gotLikeVM.profiles.count)")
+                        .font(.system(size: isBoldCount ? 18 : 15, weight: isBoldCount ? .heavy : .regular))
+                            .foregroundColor(.white)
+                }
+                .padding(EdgeInsets(top: 10, leading: 28, bottom: 10, trailing: 28))
+                .background(Color(0x00AEC2))
+                .cornerRadius(20)
+                .padding(.leading, 10)
+                
                 Spacer()
                 Image("detail-pairs")
                     .resizable()
@@ -40,7 +48,7 @@ struct GotLikeView: View {
             .padding(.horizontal, 24)
             
             ScrollView (.vertical, showsIndicators: false) {
-                LazyVGrid (columns: columns, spacing: 24){
+                LazyVGrid (columns: columns, spacing: 14){
                     ForEach(Array(gotLikeVM.profiles.enumerated()), id: \.element) { index, profile in
                         GridCell(
                             gotLikeVM: gotLikeVM,
@@ -49,7 +57,8 @@ struct GotLikeView: View {
                             age: profile.age,
                             residence: profile.residence,
                             image: profile.image,
-                            index: index
+                            index: index,
+                            isBoldCount: $isBoldCount
                         )
                     }
                 }
@@ -61,6 +70,7 @@ struct GotLikeView: View {
             .refreshable {
                 await Task.sleep(1000000000)
             }
+    
         }
         .padding(.vertical, 10)
     }
@@ -88,6 +98,8 @@ struct GridCell: View {
     @GestureVelocity private var velocity: CGVector
     @State var isRotate: Bool = false
     @State var isFrontItem: Bool = false
+    @State var isLeftSwipe: Bool = false
+    @Binding var isBoldCount: Bool
     
     var body: some View {
         VStack(spacing: 0){
@@ -132,32 +144,40 @@ struct GridCell: View {
                         .frame(width: 155.5, height: 220)
                         .foregroundColor(.white.opacity(0))
                         .background(
-                            LinearGradient(
-                                gradient: Gradient(colors: [Color(0x000000).opacity(0.5),Color(0x000000).opacity(0)]),
-                                startPoint: .init(x: 1, y: 0),    // start地点
-                                endPoint: .init(x: 0, y: 1)     // end地点
-                            ))
+                            isLeftSwipe ?
+                                LinearGradient(
+                                    gradient: Gradient(colors: [Color(0x000000).opacity(0.5),Color(0x000000).opacity(0)]),
+                                    startPoint: .init(x: 1, y: 0),    // start地点
+                                    endPoint: .init(x: 0, y: 1)     // end地点
+                                )
+                            :
+                                LinearGradient(
+                                    gradient: Gradient(colors: [Color(0x00C1D4).opacity(1),Color(0x00C1D4).opacity(0)]),
+                                    startPoint: .init(x: 0, y: 0),    // start地点
+                                    endPoint: .init(x: 1, y: 1)     // end地点
+                                ))
                         .cornerRadius(20, style: .continuous)
                     
-                    Image("nope")
+                    Image(isLeftSwipe ? "nope" : "like")
                         .renderingMode(.template)
                         .resizable()
                         .aspectRatio(contentMode:.fit)
-                        .frame(width: 36)
-                        .foregroundColor(Color(0x96AAAA))
-                        .offset(x: 30, y: -85)
-                        .rotationEffect(Angle(degrees: 10))
+                        .frame(width: isLeftSwipe ? 36 : 34)
+                        .foregroundColor(isLeftSwipe ? Color(0x96AAAA) : .white)
+                        .offset(
+                            x: isLeftSwipe ? 30 : -32,
+                            y: isLeftSwipe ? -85 : -80)
+                        .rotationEffect(Angle(degrees: isLeftSwipe ? 10 : -8))
                 }
                 .opacity(isRotate ? getOverlayAmount() : 0)
             }
-            .padding(.bottom, 8)
             
             VStack (spacing: 0){
                 Text(nickname)
-                    .padding(.bottom, -5)
+                    .padding(.top, 8)
                     .fontWeight(.bold)
                     .font(.system(size: 14, weight: .heavy))
-                    .padding(.bottom, 6)
+                    .padding(.bottom, 4)
                 HStack(spacing: 4){
                     Circle()
                         .frame(width: 8, height: 8)
@@ -169,8 +189,14 @@ struct GridCell: View {
                         .foregroundColor(.gray)
                         .font(.system(size: 14, weight: .regular))
                 }
+                .padding(.bottom, 8)
             }
+
         }
+        .background(
+            .white.opacity(0.9)
+        )
+        .cornerRadius(20, style: .continuous)
         .offset(currentOffset)
         .rotationEffect(isRotate ? Angle(degrees: getRotationAmount()) : Angle(degrees: 0))
         .zIndex(isFrontItem ? 8 : 0)
@@ -182,10 +208,13 @@ struct GridCell: View {
             .onChanged { value in
                 
                 currentOffset = value.translation
-                if currentOffset.width < 0 {
-                    isRotate = true
-                }
+                isRotate = true
                 isFrontItem = true
+                if currentOffset.width < 0{
+                    isLeftSwipe = true
+                } else {
+                    isLeftSwipe = false
+                }
             }
                  
             .onEnded { value in
@@ -220,10 +249,22 @@ struct GridCell: View {
                     if value.predictedEndTranslation.width < -1 * screenWidth / 3 {
                         
                         currentOffset.width = value.predictedEndTranslation.width * 2
+                        isBoldCount = true
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             gotLikeVM.itemRemove(index: index)
+                            isBoldCount = false
                         }
+                    } else if value.predictedEndTranslation.width > 1 * screenWidth / 3 {
+                        
+                        currentOffset.width = value.predictedEndTranslation.width * 2
+                        isBoldCount = true
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            gotLikeVM.itemRemove(index: index)
+                            isBoldCount = false
+                        }
+                        
                     } else {
                         
                         // cancel
@@ -245,6 +286,11 @@ struct GridCell: View {
                     if value.predictedEndTranslation.width < -1 * screenWidth / 3 {
                         
                         currentOffset.height = value.predictedEndTranslation.height * 2
+                        
+                    } else if value.predictedEndTranslation.width > 1 * screenWidth / 3 {
+                        
+                        currentOffset.height = value.predictedEndTranslation.height * 2
+                        
                     }
                 }
                 
@@ -262,9 +308,10 @@ struct GridCell: View {
             let percentageAsDouble = Double(percentage)
             let maxAngle: Double = 1
             
-            if currentOffset.width > 0 {
-                return 0
-            } else if percentage < 1 {
+//            if currentOffset.width > 0 {
+//                return 0
+//            } else
+            if percentage < 1 {
                 return percentageAsDouble * maxAngle
             } else {
                 return 1
@@ -282,12 +329,26 @@ struct GridCell: View {
             let maxAngle: Double = 12
             
             if currentOffset.width > 0 {
-                return 0
-            } else if percentage < 1 {
-                return percentageAsDouble * maxAngle * -1
+                if percentage < 1 {
+                    return percentageAsDouble * maxAngle
+                } else {
+                    return 12
+                }
             } else {
-                return -12
+                if percentage < 1 {
+                    return percentageAsDouble * maxAngle * -1
+                } else {
+                    return -12
+                }
             }
+            
+//            if currentOffset.width > 0 {
+//                return 0
+//            } else if percentage < 1 {
+//                return percentageAsDouble * maxAngle * -1
+//            } else {
+//                return -12
+//            }
         }
     }
     
